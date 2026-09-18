@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 850 800" fill="none" stroke="#3c705b" stroke-width="1.5" stroke-linejoin="round">
+  <g id="site" stroke="#adc3b4" stroke-width="1">
+    <path d="M30 542 428 313 819 538 420 770Z"/>
+    <path d="m83 572 399-230M137 604l398-231M190 635l398-231M244 666l398-231M298 697l398-231M352 728l398-231M83 511l391 226M137 480l391 226M191 449l391 226M245 418l391 226M299 387l391 226M353 356l391 226" opacity=".55"/>
+  </g>
+  <g id="base">
+    <path d="m142 522 285 165 292-168-285-165Z" fill="#e1e9df"/>
+    <path d="M142 522v15l285 165v-15M427 687l292-168v15L427 702" fill="#c4d3c3"/>
+    <path d="m177 520 251 145 256-148-251-145Z" fill="#f8faf5"/>
+  </g>
+  <g id="inside">
+    <path d="m180 510 250 145 250-145-250-145Z" fill="#e1eadb"/>
+    <path d="M430 655V475l250-145v180ZM430 475 180 330v180" fill="#e4edde"/>
+    <path d="m195 439 235 136 235-136M308 404v179m236-185v181" stroke="#8eaf92"/>
+    <path d="m238 511 61-35 83 48-61 36Zm142 80 61-35 83 48-61 36Z" fill="#b4d5a0"/>
+    <g stroke="#287347" stroke-width="3">
+      <path d="m235 523 180 104 211-122M284 551v-59m62 95v-59m66 98v-59m56 32v-60m62 24v-62m60 25v-60"/>
+      <path d="m270 483 27 16v37l-27-16ZM332 519l27 16v37l-27-16ZM454 532l27-16v37l-27 16ZM516 495l27-16v37l-27 16ZM576 460l27-16v37l-27 16Z" fill="#eaf5e0" stroke-width="1.4"/>
+    </g>
+  </g>
+  <g id="shell">
+    <path d="M180 330 430 475v180L180 510Z" fill="#f4f6ed"/>
+    <path d="m430 475 250-145v180L430 655Z" fill="#d4e1d0"/>
+    <path d="M180 330 305 245 430 475Z" fill="#fbfcf7"/>
+    <path d="m214 386 49 29v68l-49-28ZM288 429l49 28v69l-49-29Z" fill="#b6cbbb"/>
+    <path d="m221 398 35 20v55l-35-20ZM295 441l35 20v55l-35-20Z" fill="#e4eee4"/>
+    <path d="m355 499 48 28v112l-48-28Z" fill="#a6baa5"/>
+    <path d="m363 514 32 18v92l-32-18Z" fill="#cddcc9"/>
+    <path d="m469 479 47-27v72l-47 27ZM543 436l47-27v72l-47 27ZM617 393l37-21v72l-37 21Z" fill="#6d9278"/>
+    <path d="m476 484 33-19v51l-33 19ZM550 441l33-19v51l-33 19ZM623 398l25-14v51l-25 14Z" fill="#cadbca"/>
+    <path d="m492 475 0 51m74-93v51m70-92v51M180 493l250 145 250-145" stroke="#9ab399"/>
+    <path d="m281 315 28 17v35l-28-16Z" fill="#9fb89f"/>
+  </g>
+  <g id="roof">
+    <path d="m159 326 146-101 276-156-145 101Z" fill="#e5eddb"/>
+    <path d="m305 225 146 244 252-145L581 69Z" fill="#256147" stroke="#1f543e"/>
+    <path d="m159 326 21 14 125-88 132 230 266-153v-5L451 469 305 225Z" fill="#aac49d"/>
+    <g stroke="#679275" stroke-width="1">
+      <path d="m329 264 273-157M353 304l269-155M377 345l265-153M401 386l260-150M425 426l256-148"/>
+      <path d="m343 203 145 244M381 181l145 244M419 159l145 244M457 137l145 244M495 115l145 244M533 93l145 244"/>
+    </g>
+    <path d="m492 155 26 15 26-15-26-15Z" fill="#cddbc5"/>
+    <path d="M492 155v81l26 15v-81M518 251l26-15v-81" fill="#a2b99c"/>
+    <path d="m498 157 20 11 20-11-20-11Z" fill="#58765d"/>
+  </g>
+  <!-- Warm architectural lighting. These apertures match the existing facade. -->
+  <g id="light-front" stroke="#b58d4d" stroke-width="1">
+    <path d="m221 398 35 20v55l-35-20ZM295 441l35 20v55l-35-20Z" fill="#f5d48e"/>
+    <path d="m225 404 12 7v46l-12-7Zm74 43 12 7v46l-12-7Z" fill="#fff0ba" stroke="none"/>
+    <path d="m238 408v55m74-12v55" stroke="#c49857"/>
+  </g>
+  <g id="light-side" stroke="#bb9656" stroke-width="1">
+    <path d="m476 484 33-19v51l-33 19ZM550 441l33-19v51l-33 19ZM623 398l25-14v51l-25 14Z" fill="#f7d994"/>
+    <path d="m480 487 10-6v43l-10 6Zm74-43 10-6v43l-10 6Zm73-43 7-4v43l-7 4Z" fill="#fff2c8" stroke="none"/>
+    <path d="M492 475v51m74-94v51m70-94v51" stroke="#bb9656"/>
+  </g>
+  <g id="light-attic" stroke="#ba955a" stroke-width="1">
+    <path d="m282 316 26 16v33l-26-15Z" fill="#f5d48e"/>
+    <path d="m286 322 8 5v25l-8-5Z" fill="#fff0bd" stroke="none"/>
+  </g>
+  <g id="room-light" stroke="none">
+    <path d="m238 511 61-35 83 48-61 36Zm142 80 61-35 83 48-61 36Z" fill="#edc77e" fill-opacity=".65"/>
+    <path d="m454 532 27-16v37l-27 16Zm62-37 27-16v37l-27 16Zm60-35 27-16v37l-27 16Z" fill="#f9dd9e" fill-opacity=".9"/>
+    <path d="m443 575 58-33 37 22-58 33Zm62-37 58-33 37 22-58 33Z" fill="#f5d48e" fill-opacity=".2"/>
+  </g>
+  <g id="analysis" stroke="#43834e" stroke-width="1">
+    <path d="m128 443 305 176 303-176v59L433 678 128 502Z" fill="#a3ce78" fill-opacity=".13"/>
+    <path d="M128 443v59m305 117v59m303-235v59" stroke-width="2"/>
+  </g>
+</svg>
