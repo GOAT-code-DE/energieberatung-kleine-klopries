@@ -71,6 +71,6 @@
   if (email && topic) {
     const safeTopic = topic.replace(/[\r\n]/g, ' ').slice(0, 100);
     email.href = 'mailto:energieberatung-kleine-klopries@gmx.de?subject=' + encodeURIComponent('Anfrage: ' + safeTopic);
-    if (subjectLabel) subjectLabel.textContent = 'Anfrage: ' + safeTopic + ' ↗';
+    if (subjectLabel) subjectLabel.textContent = 'Anfrage: ' + safeTopic;
   }
 })();

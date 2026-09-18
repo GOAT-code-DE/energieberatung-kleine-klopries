@@ -1,6 +1,6 @@
 /* Quiet, directly navigable companion pages to the Scroll-Craft homepage. */
 .services-page .analysis-heading h1 { font-size:clamp(48px,5.2vw,76px); letter-spacing:-.055em; }
-.services-page .scene-overview { display:inline-flex; gap:16px; align-items:center; min-height:44px; margin-top:22px; font-size:13px; text-decoration:underline; text-underline-offset:5px; }
+.services-page .scene-overview { display:block; min-height:36px; margin-top:22px; font-size:13px; color:#4c6346; }
 .services-page .scene-overview:hover { color:#256641; }
 .services-page .scene-controls { position:relative; z-index:5; }
 /* Controls have their own left-hand area, never a place on top of the roof. */
@@ -29,7 +29,7 @@
  .services-page .analysis-heading h1 { font-size:clamp(32px,5vw,44px); }
  .services-page .scene-overview { margin-top:4px; font-size:12px; min-height:36px; }
  .services-page .scene-controls { gap:4px; }
- .services-page:not(.motion-static) .exploded-wrap { top:248px; height:calc(67svh - 248px); }
+ .services-page:not(.motion-static) .exploded-wrap { top:248px; height:calc(var(--scene-height,100svh) * .67 - 248px); }
  .services-page .diagram-note { bottom:0; }
 }
 @media(max-width:600px) {
@@ -40,7 +40,7 @@
 @media(max-width:820px) and (max-height:700px) {
  .services-page .analysis-heading h1 { font-size:29px; }
  .services-page .analysis-heading { top:84px; }
- .services-page:not(.motion-static) .exploded-wrap { top:220px; height:calc(66svh - 220px); }
+ .services-page:not(.motion-static) .exploded-wrap { top:220px; height:calc(var(--scene-height,100svh) * .66 - 220px); }
  .services-page:not(.motion-static) .analysis-stories { top:68%; }
  .services-page .diagram-note { bottom:0; font-size:8px; }
 }
@@ -48,7 +48,7 @@
 .services-intro h1,.profile-copy h1 { font-size:clamp(48px,5.3vw,76px); font-weight:450; line-height:1.02; letter-spacing:-.06em; }
 .services-intro h1 span,.profile-copy h1 span { color:#608146; }
 .services-intro>p:last-child { max-width:570px; font-size:18px; color:var(--sc-ink-soft); margin-top:24px; }
-.services-layout { display:grid; grid-template-columns:minmax(210px,.7fr) minmax(0,2fr); gap:clamp(40px,7vw,112px); align-items:start; padding-bottom:72px; }
+.services-layout { display:block; max-width:960px; padding-bottom:72px; }
 .services-aside { position:sticky; top:112px; }
 .services-aside nav { border-top:1px solid #c7d2c0; }
 .services-aside nav a { display:flex; align-items:center; justify-content:space-between; min-height:56px; gap:20px; border-bottom:1px solid #c7d2c0; font-size:15px; }

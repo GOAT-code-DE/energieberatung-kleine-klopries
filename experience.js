@@ -2,89 +2,106 @@
   'use strict';
   const root = document.querySelector('.experience');
   if (!root) return;
-  const act = document.querySelector('.building-act');
-  const stage = document.querySelector('.building-stage');
+  const act = root.querySelector('.building-act');
+  // Homepage: unchanged Scroll Craft engine. Bespoke house: a stable timeline
+  // whose geometry is not recalculated when iOS browser chrome changes height.
+  if (!act) { window.ScrollCraft?.mount(root); return; }
+  const stage = act.querySelector('.building-stage');
+  const drawing = act.querySelector('.exploded-building');
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
-  const stories = [...document.querySelectorAll('[data-story]')];
-  const phases = [...document.querySelectorAll('[data-phase]')];
-  const lightSwitch = document.querySelector('.light-switch');
-  const lightLabel = lightSwitch?.querySelector('.light-label');
-  // null = follow the scene; a manual choice lasts only for this page visit.
-  let manualLight = null;
-  let lightOn = lightSwitch?.getAttribute('aria-pressed') === 'true';
+  const touch = matchMedia('(pointer: coarse)');
+  const stories = [...act.querySelectorAll('[data-story]')];
+  const phases = [...act.querySelectorAll('[data-phase]')];
+  const bars = [...act.querySelectorAll('.analysis-track b')];
+  const lightSwitch = act.querySelector('.light-switch');
+  const lightLabel = lightSwitch.querySelector('.light-label');
+  const parts = Object.fromEntries(['roof','shell','window-lights','analysis','inside'].map(name => [name, drawing.querySelector('.house-'+name)]));
+  const clamp = n => Math.max(0, Math.min(1, n));
+  let manualLight = null, lightOn = false, active = -1;
+  let top = 0, travel = 1, unit = 1, width = 0, frame = 0;
+  let progress = 0, lastPaint = -1, previousTime = 0;
   const setLight = on => {
-    if (!lightSwitch || on === lightOn) return;
+    if (on === lightOn) return;
     lightOn = on;
     root.classList.toggle('lights-off', !on);
     lightSwitch.setAttribute('aria-pressed', String(on));
     lightLabel.textContent = on ? 'Licht an' : 'Licht aus';
   };
-  const staticMode = () => {
-    document.documentElement.classList.toggle('sc-boot', !reduced.matches && !!window.ScrollCraft);
-    root.classList.toggle('motion-static', reduced.matches || !window.ScrollCraft);
-    root.classList.toggle('scroll-live', !reduced.matches && !!window.ScrollCraft);
-    stories.forEach(story => { story.inert = false; story.removeAttribute('aria-hidden'); });
-  };
-  staticMode();
-  // CSS removes pinned height and reflows all copy when motion is disabled.
-  // Mount only once: the snapshot engine does not expose a destroy method.
-  const scene = window.ScrollCraft?.mount(root);
-  let active = -1;
-  let scheduled = false;
-  const clamp = n => Math.max(0, Math.min(1, n));
-  const render = () => {
-    scheduled = false;
-    if (!act || !stage) return;
-    if (reduced.matches || !window.ScrollCraft) {
-      setLight(manualLight ?? false);
-      return;
-    }
-    const p = Number(act.style.getPropertyValue('--sc-p')) || 0;
-    setLight(manualLight ?? p >= .33);
-    const open = clamp(p * 1.5);
-    const heat = clamp((p - .15) / .85);
-    // Geometry follows the engine's --sc-p directly in CSS, in the same frame.
-    // Only discrete light/story state needs JavaScript; no per-frame text layout.
+  const paint = p => {
+    setLight(manualLight ?? (!reduced.matches && p >= .33));
+    if (p === lastPaint) return;
+    lastPaint = p;
+    const open = clamp(p * 1.5), heat = clamp((p - .15) / .85);
+    // Move separate HTML layers, not SVG groups. No inherited per-frame vars.
+    const move = (el, x, y) => { el.style.transform = 'translate3d('+(x*unit).toFixed(3)+'px,'+(y*unit).toFixed(3)+'px,0)'; };
+    move(parts.roof, -28*open, -180*open);
+    move(parts.shell, -125*open, 38*open);
+    move(parts['window-lights'], -125*open, 38*open);
+    move(parts.analysis, 0, -100*heat);
+    parts.shell.style.opacity = String(1 - open*.65);
+    parts.analysis.style.opacity = String(.2 + heat*.8);
+    parts.inside.style.opacity = String(.35 + heat*.65);
+    bars.forEach(bar => { bar.style.transform = 'scaleX('+heat.toFixed(4)+')'; });
     const next = p < .33 ? 0 : p < .67 ? 1 : 2;
-    // Verification describes the rendered roof/shell translations, not scroll.
-    stage.dataset.scVerifyState = `roof:${Math.round(-180*open)};shell:${Math.round(-125*open)};plane:${Math.round(-100*heat)};story:${next};light:${root.classList.contains('lights-off') ? 'off' : 100}`;
+    stage.dataset.scVerifyState = 'roof:'+Math.round(-180*open)+';shell:'+Math.round(-125*open)+';plane:'+Math.round(-100*heat)+';story:'+next+';light:'+(lightOn ? 100 : 'off');
     if (next !== active) {
       active = next;
       stories.forEach((story, i) => {
         story.classList.toggle('is-active', i === next);
-        story.inert = i !== next;
-        story.setAttribute('aria-hidden', String(i !== next));
+        story.inert = !reduced.matches && i !== next;
+        story.setAttribute('aria-hidden', String(!reduced.matches && i !== next));
       });
-      phases.forEach((button, i) => button.setAttribute('aria-pressed', String(i === next)));
+      phases.forEach((label, i) => label.classList.toggle('is-active', i === next));
     }
   };
-  const queue = () => { if (!scheduled) { scheduled = true; requestAnimationFrame(render); } };
-  lightSwitch?.addEventListener('click', () => {
-    manualLight = root.classList.contains('lights-off');
-    setLight(manualLight);
-    queue();
+  const target = () => reduced.matches ? 0 : clamp((scrollY - top) / travel);
+  const tick = now => {
+    frame = 0;
+    if (document.hidden) return;
+    const next = target();
+    // Time-based touch interpolation works at both 60 and 120 Hz, then stops.
+    const dt = previousTime ? Math.min(now - previousTime, 50) : 16;
+    previousTime = now;
+    progress += (next - progress) * (touch.matches ? 1 - Math.exp(-dt/28) : 1);
+    if (Math.abs(next - progress) < .00015) progress = next;
+    paint(progress);
+    if (progress !== next) frame = requestAnimationFrame(tick);
+    else previousTime = 0;
+  };
+  const queue = () => { if (!frame && !document.hidden) frame = requestAnimationFrame(tick); };
+  const mode = () => {
+    document.documentElement.classList.toggle('sc-boot', !reduced.matches);
+    document.documentElement.classList.add('sc-ready');
+    root.classList.toggle('motion-static', reduced.matches);
+    root.classList.toggle('scroll-live', !reduced.matches);
+    active = -1; lastPaint = -1;
+  };
+  const layout = (force = false) => {
+    const mobile = touch.matches || innerWidth <= 820;
+    if (!force && mobile && width === innerWidth) return;
+    width = innerWidth;
+    act.style.removeProperty('--scene-height');
+    if (!reduced.matches) act.style.setProperty('--scene-height', stage.offsetHeight+'px');
+    top = act.getBoundingClientRect().top + scrollY;
+    travel = Math.max(1, act.offsetHeight - stage.offsetHeight);
+    unit = Math.min(drawing.clientWidth / 970, drawing.clientHeight / 1000);
+    progress = target(); lastPaint = -1; paint(progress);
+  };
+  mode(); layout(true);
+  addEventListener('scroll', queue, {passive:true});
+  addEventListener('resize', () => layout(), {passive:true});
+  reduced.addEventListener('change', () => { mode(); layout(true); });
+  lightSwitch.addEventListener('click', () => {
+    manualLight = !lightOn;
+    lastPaint = -1; paint(progress);
   });
-  // Mutation callbacks run before paint. Another rAF here delayed the roof by
-  // a complete frame behind the scroll position (especially visible on a wheel).
-  if (act) new MutationObserver(render).observe(act, {attributes:true, attributeFilter:['style']});
-  reduced.addEventListener('change', () => { staticMode(); active = -1; queue(); });
-  phases.forEach(button => button.addEventListener('click', () => {
-    const p = [.08, .48, .9][Number(button.dataset.phase)];
-    const top = act.getBoundingClientRect().top + scrollY;
-    // Jump to a readable plateau, never animate multiple viewports for keyboard input.
-    scrollTo({top:top + (act.offsetHeight - innerHeight) * p, behavior:'instant'});
-    queue();
-  }));
-  addEventListener('pageshow', () => {
-    manualLight = null;
-    // Re-read restored positions, including Back/Forward cache, without mounting twice.
-    scene?.layout();
-    active = -1;
-    queue();
-  });
+  addEventListener('pageshow', () => { manualLight = null; layout(true); });
   addEventListener('pagehide', () => {
-    manualLight = null;
-    setLight(false);
+    if (frame) cancelAnimationFrame(frame);
+    frame = 0; previousTime = 0; manualLight = null; setLight(false);
   });
-  queue();
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) { cancelAnimationFrame(frame); frame = 0; previousTime = 0; }
+    else { progress = target(); lastPaint = -1; paint(progress); }
+  });
 })();
